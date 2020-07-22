@@ -1,10 +1,46 @@
 import ast
+import functools
 import os
 from unittest import TestCase
 
 from django.conf import global_settings
 
-from bukdjango_envsettings import settings_to_dict, eval_settings, MAPPING
+from bukdjango_envsettings.utils import settings_to_dict, eval_settings, MAPPING
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+
+
+class ContextDecorator:
+
+    def __call__(self, f):
+        @functools.wraps(f)
+        def decorated(*args, **kwargs):
+            with self:
+                return f(*args, **kwargs)
+        return decorated
+
+
+class temp_django_settings(ContextDecorator):
+
+    def __enter__(self):
+        import django.conf.global_settings
+        self.old_settings = django.conf.global_settings
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import django.conf.global_settings
+        django.conf.global_settings = self.old_settings
+
+
+class temp_environ(ContextDecorator):
+
+    def __enter__(self):
+        self.old_env = dict(os.environ.copy())
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        os.environ.clear()
+        os.environ.update(self.old_env)
 
 
 class TestMapping(TestCase):
@@ -17,10 +53,7 @@ class TestMapping(TestCase):
             k.upper() == k
         }
 
-    @staticmethod
-    def print_as_key(v):
-        print(f"'{v}': ast.literal_eval,")
-
+    @temp_environ()
     def test_settings_to_dict(self):
         """
         Converting settings module to dict works.
@@ -33,27 +66,16 @@ class TestMapping(TestCase):
         for opt in ["SECRET_KEY", "INSTALLED_APPS"]:
             self.assertIn(opt, settings.keys())
 
+    @temp_environ()
     def test_all_settings_mapped(self):
         """
         Default Django settings have
         coresponding casting type.
         """
-        self.assertCountEqual(
-            settings_to_dict(global_settings),
-            MAPPING,
-        )
+        for k in settings_to_dict(global_settings):
+            self.assertIn(k, MAPPING)
 
-    def test_custom_settings_module(self):
-        """
-        Given custom settings module, all works.
-        """
-        from . import settings_test
-
-        settings = settings_to_dict(settings_test)
-
-        for x in ['A', 'NEW', 'EXTRA']:
-            self.assertIn(x, settings)
-
+    @temp_environ()
     def test_eval_extra_map(self):
         """
         Given extra mapping, settings typemap is correct.
@@ -82,6 +104,7 @@ class TestMapping(TestCase):
             if k == 'C':
                 self.assertEqual(["a", "b", "c", "d"], v)
 
+    @temp_environ()
     def test_eval_with_default_settings(self):
         """
         Given default Django settings, convert them
@@ -99,14 +122,22 @@ class TestMapping(TestCase):
         for k, v in self.django_default_settings.items():
             self.assertEqual(v, settings_eval[k])
 
+    @temp_environ()
+    def test_update_from_env(self):
+        os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
+        os.environ["DJANGO_SECRET_KEY"] = 'key'
+        os.environ["DJANGO_SITE_ID"] = '255'
+        os.environ["DJANGO_EMAIL_PORT"] = '644'
 
-class TestEnv(TestCase):
+        import django
+        from django.conf import settings
+        django.setup()
 
-    file_dir = os.path.dirname(os.path.realpath(__file__))
+        self.assertEqual(settings.SECRET_KEY, 'key')
+        self.assertEqual(settings.SITE_ID, 255)
+        self.assertEqual(settings.EMAIL_PORT, 25)
 
-    def test_open(self):
-        import configparser
-        config = configparser.ConfigParser()
-        config.read(os.path.join(self.file_dir, 'envsettings/1.env'))
-        for k in config["CONFIG"]:
-            print(config["CONFIG"][k])
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()
