@@ -14,7 +14,7 @@ run: build
 
 .PHONY: dist
 dist: build
-	docker run --rm --volume=${PWD}/appdist:/dockerapp test python setup.py sdist
+	docker run --rm --volume=${PWD}:/dockerapp test python setup.py sdist
 
 suite: build test install
 build-test: build test
