@@ -5,7 +5,7 @@ APP_NAME = "bukdjango_envsettings"
 setup(
     name=APP_NAME,
     zip_safe=False,
-    version="0.1.3",
+    version="0.1.4",
     include_package_data=True,
     packages=[APP_NAME],
     python_requires=">=3.8",
