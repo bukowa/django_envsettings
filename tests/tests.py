@@ -6,6 +6,7 @@ from unittest import TestCase
 from django.conf import global_settings
 
 from bukdjango_envsettings.utils import settings_to_dict, eval_settings, MAPPING
+from django.core.management import call_command
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -130,6 +131,7 @@ class TestMapping(TestCase):
         os.environ["DJANGO_EMAIL_PORT"] = '644'
         os.environ["DJANGO_EXTRA_KEY"] = 'asdd'
         os.environ["DJANGO_EXTRA_KEY2"] = 'asdds'
+        os.environ["DJANGO_ENGINE_NAME"] = ':memory:'
 
         import django
         from django.conf import settings
@@ -140,6 +142,8 @@ class TestMapping(TestCase):
         self.assertEqual(settings.EMAIL_PORT, 25)
         self.assertEqual(settings.EXTRA_KEY, 'asdd')
         self.assertIsNone(getattr(settings, "EXTRA_KEY2", None))
+
+        call_command('migrate')
 
 
 if __name__ == '__main__':

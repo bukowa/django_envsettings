@@ -11,8 +11,17 @@ update_from_env(
     extra_mapping={
         'EXTRA_KEY': str,
         'EXTRA_KEY2': str,
+        'ENGINE_NAME': str,
     },
     extra_allowed=[
         'EXTRA_KEY',
+        'ENGINE_NAME',
     ]
 )
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ENGINE_NAME,
+    }
+}
