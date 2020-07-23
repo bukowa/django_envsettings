@@ -11,6 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Build dist
+      run: make dist
+
     - name: Publish a Python distribution to PyPI
       uses: pypa/gh-action-pypi-publish@186232109eade3d22bfe1bca29ac9a1312598511
       with:
