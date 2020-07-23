@@ -128,6 +128,8 @@ class TestMapping(TestCase):
         os.environ["DJANGO_SECRET_KEY"] = 'key'
         os.environ["DJANGO_SITE_ID"] = '255'
         os.environ["DJANGO_EMAIL_PORT"] = '644'
+        os.environ["DJANGO_EXTRA_KEY"] = 'asdd'
+        os.environ["DJANGO_EXTRA_KEY2"] = 'asdds'
 
         import django
         from django.conf import settings
@@ -136,6 +138,8 @@ class TestMapping(TestCase):
         self.assertEqual(settings.SECRET_KEY, 'key')
         self.assertEqual(settings.SITE_ID, 255)
         self.assertEqual(settings.EMAIL_PORT, 25)
+        self.assertEqual(settings.EXTRA_KEY, 'asdd')
+        self.assertIsNone(getattr(settings, "EXTRA_KEY2", None))
 
 
 if __name__ == '__main__':
