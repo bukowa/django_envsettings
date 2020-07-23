@@ -3,7 +3,7 @@ build:
 	docker build --tag=test .
 
 test:
-	docker run --rm test python ./runtests.py
+	docker run --rm test python manage.py migrate && python ./runtests.py
 
 install:
 	docker run --rm test pip install .

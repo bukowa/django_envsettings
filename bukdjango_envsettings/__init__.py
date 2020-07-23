@@ -1,14 +1,11 @@
-import importlib
-import os
-from typing import Iterable, Callable, Dict, Any, Tuple, List
-
-from django.core.exceptions import ImproperlyConfigured
+from typing import Iterable, Callable, Dict, Any, Tuple
 
 from bukdjango_envsettings.conversion import MAPPING
 from bukdjango_envsettings.utils import gather_settings, eval_settings
 
 
 def update_from_env(
+        module,
         pre: str = "DJANGO_",
         mapping: Dict[str, Callable[[str], Any]] = MAPPING,
         extra_mapping: Dict[str, Callable[[str], Any]] = None,
@@ -17,7 +14,7 @@ def update_from_env(
         hook: Callable[[str, Any], Tuple[str, Any]] = None
 ):
     """
-    Update settings module that is set by `DJANGO_SETTINGS_MODULE` env variable.
+    :param module `sys.modules[__name__]`
     :param pre: prefix for environment variables
     :param mapping: mapping of `setting name`: `conversion function`
     :param extra_mapping: same as mapping but will update defaults
@@ -25,12 +22,6 @@ def update_from_env(
     :param extra_allowed: same as allowed but will update defaults
     :param hook: function that takes and returns `setting name` and `setting value`
     """
-    settings_module_path = os.environ.get('DJANGO_SETTINGS_MODULE')
-
-    if not settings_module_path:
-        raise ImproperlyConfigured(
-            '`DJANGO_SETTINGS_MODULE` environment variable is `None`'
-        )
 
     # update mapping
     if extra_mapping:
@@ -43,9 +34,6 @@ def update_from_env(
     if extra_allowed:
         allowed.extend(list(extra_allowed))
 
-    # import `DJANGO_SETTINGS_MODULE`
-    settings_module = importlib.import_module(settings_module_path)
-
     # gather all environment settings
     env_settings = gather_settings(pre)
 
@@ -56,4 +44,4 @@ def update_from_env(
         if k in allowed:
             if hook:
                 k, v = hook(k, v)
-            setattr(settings_module, k, v)
+            setattr(module, k, v)

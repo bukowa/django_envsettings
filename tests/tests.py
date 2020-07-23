@@ -55,19 +55,6 @@ class TestMapping(TestCase):
         }
 
     @temp_environ()
-    def test_settings_to_dict(self):
-        """
-        Converting settings module to dict works.
-        """
-        settings = settings_to_dict(global_settings)
-        settings2 = settings_to_dict()
-        self.assertEqual(settings, settings2)
-
-        # todo there are settings, but we dont know exact values
-        for opt in ["SECRET_KEY", "INSTALLED_APPS"]:
-            self.assertIn(opt, settings.keys())
-
-    @temp_environ()
     def test_all_settings_mapped(self):
         """
         Default Django settings have
@@ -134,13 +121,15 @@ class TestMapping(TestCase):
         os.environ["DJANGO_ENGINE_NAME"] = ':memory:'
 
         import django
-        from django.conf import settings
+
         django.setup()
 
-        self.assertEqual(settings.SECRET_KEY, 'key')
-        self.assertEqual(settings.SITE_ID, 255)
-        self.assertEqual(settings.EMAIL_PORT, 25)
-        self.assertEqual(settings.EXTRA_KEY, 'asdd')
+        from django.conf import settings
+
+        self.assertEqual('key', settings.SECRET_KEY)
+        self.assertEqual(255, settings.SITE_ID)
+        self.assertEqual(25, settings.EMAIL_PORT)
+        self.assertEqual('asdd', settings.EXTRA_KEY)
         self.assertIsNone(getattr(settings, "EXTRA_KEY2", None))
 
         call_command('migrate')

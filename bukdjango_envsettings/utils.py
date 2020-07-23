@@ -12,9 +12,6 @@ def settings_to_dict(settings_module=None) -> dict:
     """
     Convert Django settings module into dict.
     """
-    if not settings_module:
-        from django.conf import global_settings as settings_module
-
     return {
         k: type(getattr(settings_module, k)) for k in dir(settings_module) if
         not k.startswith('_') and

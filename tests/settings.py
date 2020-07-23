@@ -1,8 +1,10 @@
 import os
+import sys
 
 from bukdjango_envsettings import update_from_env
 
 update_from_env(
+    sys.modules[__name__],
     pre='DJANGO_',
     allowed=[
         'SECRET_KEY',
@@ -18,6 +20,7 @@ update_from_env(
         'ENGINE_NAME',
     ]
 )
+
 
 DATABASES = {
     'default': {
