@@ -5,7 +5,7 @@ from unittest import TestCase
 
 from django.conf import global_settings
 
-from bukdjango_envsettings.utils import settings_to_dict, eval_settings, MAPPING
+from djangobuk_envsettings.utils import settings_to_dict, eval_settings, MAPPING
 from django.core.management import call_command
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -101,7 +101,7 @@ class TestMapping(TestCase):
         settings_str = {
             k: str(v) for (k, v) in self.django_default_settings.items()
         }
-        settings_eval = eval_settings(settings_str)
+        settings_eval = eval_settings(settings_str, mapping=MAPPING)
 
         self.assertCountEqual(settings_str, settings_eval)
         self.assertCountEqual(settings_str, self.django_default_settings)
@@ -119,6 +119,8 @@ class TestMapping(TestCase):
         os.environ["DJANGO_EXTRA_KEY"] = 'asdd'
         os.environ["DJANGO_EXTRA_KEY2"] = 'asdds'
         os.environ["DJANGO_ENGINE_NAME"] = ':memory:'
+        os.environ["DJANGO_NOT_ALLOWED"] = "not_allowed"
+        os.environ["NOT_ALLOWED"] = "not_allowed"
 
         import django
 
@@ -131,7 +133,7 @@ class TestMapping(TestCase):
         self.assertEqual(25, settings.EMAIL_PORT)
         self.assertEqual('asdd', settings.EXTRA_KEY)
         self.assertIsNone(getattr(settings, "EXTRA_KEY2", None))
-
+        self.assertEqual(getattr(settings, "NOT_ALLOWED", None), None)
         call_command('migrate')
 
 

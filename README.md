@@ -1,40 +1,48 @@
 # envsettings
 
-Allows updating all django settings from `env` variables.
+* Update django settings from environment variables by updating `sys.modules`
+* Mostly using `ast.literal_eval` to convert string to python object.
+* Tested by converting all default django settings to string and back to python object and then running django command.
 
+## todo
+* simplify code into one function because most of the things that this code is doing are probably not required
 1. Usage:
     - in `myproject.settings`:
         ```python
         import os
         import sys
+        import ast
         
-        from bukdjango_envsettings import update_from_env
+        from djangobuk_envsettings import update_from_env
         
         update_from_env(
             sys.modules[__name__],
+            # default prefix for all variables
             pre='DJANGO_',
+            # settings that can be updated from env
+            # by default all settings are allowed (this option overrides)
             allowed=[
                 'SECRET_KEY',
                 'SITE_ID',
             ],
+            # optional
+            # extra settings and their types (to be used with extra_allowed)
             extra_mapping={
-                'EXTRA_KEY': str,
-                'EXTRA_KEY2': str,
-                'ENGINE_NAME': str,
+                'DATABASE_PATH': ast.literal_eval,
             },
+            # optional
+            # extra settings that can be updated from env
             extra_allowed=[
-                'EXTRA_KEY',
-                'ENGINE_NAME',
+                'DATABASE_PATH',
             ]
         )
         
-        
+        # nothing more required
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': ENGINE_NAME,
+                'NAME': DATABASE_PATH,
             }
         }
 
        ```
-    - all settings should be prefixed with `DJANGO_` by default, see 

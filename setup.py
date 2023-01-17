@@ -1,6 +1,6 @@
 from setuptools import setup
 
-APP_NAME = "bukdjango_envsettings"
+APP_NAME = "djangobuk_envsettings"
 
 setup(
     name=APP_NAME,

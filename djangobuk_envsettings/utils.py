@@ -1,4 +1,4 @@
-from bukdjango_envsettings.conversion import MAPPING
+from djangobuk_envsettings.conversion import MAPPING
 
 
 def get_mapping(extra_map: dict = None) -> dict:
@@ -24,7 +24,8 @@ def eval_settings(settings: dict, mapping=None) -> dict:
     Given settings map ex. {SECRET_KEY: "asdasd"}
     evaulate values into coresponding Python types.
     """
-    mapping = mapping or get_mapping()
+    if not mapping:
+        return {}
     # for opt, value in settings.items():
     #     print(opt, value)
     #     print(type(mapping[opt](value)))
@@ -38,8 +39,11 @@ def gather_settings(pre='DJANGO_') -> dict:
     Collect dict of settings from env variables.
     """
     import os
+    if pre:
+        return {
+            k[len(pre):]: v for (k, v) in os.environ.items() if
+            k.startswith(pre)
+        }
     return {
-        k[len(pre):]: v for (k, v) in os.environ.items() if
-        k.startswith(pre)
+        k: v for (k, v) in os.environ.items()
     }
-

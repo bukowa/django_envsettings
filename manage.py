@@ -3,7 +3,7 @@
 import os
 import sys
 import django
-from bukdjango_envsettings import update_from_env
+from djangobuk_envsettings import update_from_env
 
 os.environ["DJANGO_SECRET_KEY"] = 'key'
 os.environ["DJANGO_SITE_ID"] = '255'

@@ -1,7 +1,7 @@
 import os
 import sys
 
-from bukdjango_envsettings import update_from_env
+from djangobuk_envsettings import update_from_env
 
 update_from_env(
     sys.modules[__name__],
@@ -14,6 +14,7 @@ update_from_env(
         'EXTRA_KEY': str,
         'EXTRA_KEY2': str,
         'ENGINE_NAME': str,
+        'NOT_ALLOWED': str,
     },
     extra_allowed=[
         'EXTRA_KEY',

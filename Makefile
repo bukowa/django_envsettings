@@ -1,6 +1,6 @@
 
 build:
-	docker build --tag=test .
+	docker build --progress plain --tag=test .
 
 test:
 	docker run --rm test python manage.py migrate && python ./runtests.py

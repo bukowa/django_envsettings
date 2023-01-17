@@ -1,7 +1,7 @@
 from typing import Iterable, Callable, Dict, Any, Tuple
 
-from bukdjango_envsettings.conversion import MAPPING
-from bukdjango_envsettings.utils import gather_settings, eval_settings
+from djangobuk_envsettings.conversion import MAPPING
+from djangobuk_envsettings.utils import gather_settings, eval_settings
 
 
 def update_from_env(
@@ -22,6 +22,8 @@ def update_from_env(
     :param extra_allowed: same as allowed but will update defaults
     :param hook: function that takes and returns `setting name` and `setting value`
     """
+
+    mapping = mapping.copy()
 
     # update mapping
     if extra_mapping:
