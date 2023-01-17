@@ -163,4 +163,11 @@ MAPPING = {
     'WSGI_APPLICATION': none_or_str,
     'X_FRAME_OPTIONS': str,
     'YEAR_MONTH_FORMAT': str,
+    'CSRF_COOKIE_MASKED': ast.literal_eval,
+    'DEFAULT_AUTO_FIELD': str,
+    'DEFAULT_EXCEPTION_REPORTER': str,
+    'PASSWORD_RESET_TIMEOUT': int,
+    'SECRET_KEY_FALLBACKS': ast.literal_eval,
+    'SECURE_CROSS_ORIGIN_OPENER_POLICY': str,
+    'USE_DEPRECATED_PYTZ': ast.literal_eval,
 }

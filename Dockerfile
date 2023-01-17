@@ -1,4 +1,4 @@
-FROM python:3.8.3-slim
+FROM python:3.11-slim
 
 WORKDIR /dockerapp
 COPY requirements_tests.txt ./
