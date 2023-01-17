@@ -5,7 +5,9 @@
 * Tested by converting all default django settings to string and back to python object and then running django command.
 
 ## todo
-* simplify code into one function because most of the things that this code is doing are probably not required
+* simplify code
+* verify settings after they are casted to python object
+
 1. Usage:
     - in `myproject.settings`:
         ```python
