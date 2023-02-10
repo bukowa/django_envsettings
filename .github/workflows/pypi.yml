@@ -15,7 +15,7 @@ jobs:
       run: make dist
 
     - name: Publish a Python distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@186232109eade3d22bfe1bca29ac9a1312598511
+      uses: pypa/gh-action-pypi-publish@7eb3b701d11256e583f5b49899c5e7203deab573
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
