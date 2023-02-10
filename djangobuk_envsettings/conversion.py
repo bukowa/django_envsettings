@@ -1,14 +1,14 @@
 import ast
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("djangobuk_envsettings.conversion")
 
 
 def none_or_str(v):
     try:
         return ast.literal_eval(v)
     except (ValueError, SyntaxError):
-        logger.debug(f'Cannot convert `{v}` using `ast_literal_eval` switching to `str`')
+        logger.debug(f'cannot convert using `ast_literal_eval` switching to `str`')
         return str(v)
 
 

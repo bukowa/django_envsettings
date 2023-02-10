@@ -2,6 +2,9 @@ from typing import Iterable, Callable, Dict, Any, Tuple
 
 from djangobuk_envsettings.conversion import MAPPING
 from djangobuk_envsettings.utils import gather_settings, eval_settings
+import logging
+
+logger = logging.getLogger('djangobuk_envsettings.root')
 
 
 def update_from_env(
@@ -46,4 +49,5 @@ def update_from_env(
         if k in allowed:
             if hook:
                 k, v = hook(k, v)
+            logger.info(f"setting {k} on {module}")
             setattr(module, k, v)
