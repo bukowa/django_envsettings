@@ -5,7 +5,7 @@ APP_NAME = "djangobuk_envsettings"
 setup(
     name=APP_NAME,
     zip_safe=False,
-    version="0.4.0",
+    version="0.4.1",
     include_package_data=True,
     long_description=open("README.md").read(),
     long_description_content_type='text/markdown',
