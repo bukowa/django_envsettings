@@ -8,7 +8,6 @@ def none_or_str(v):
     try:
         return ast.literal_eval(v)
     except (ValueError, SyntaxError):
-        logger.debug(f'cannot convert using `ast_literal_eval` switching to `str`')
         return str(v)
 
 

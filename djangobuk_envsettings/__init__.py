@@ -49,5 +49,4 @@ def update_from_env(
         if k in allowed:
             if hook:
                 k, v = hook(k, v)
-            logger.debug(f"setting {k} on {module}")
             setattr(module, k, v)
