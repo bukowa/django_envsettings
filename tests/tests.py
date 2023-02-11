@@ -136,6 +136,17 @@ class TestMapping(TestCase):
         self.assertEqual(getattr(settings, "NOT_ALLOWED", None), None)
         call_command('migrate')
 
+    def test_when_opt_not_in_mapping(self):
+        """
+        When option is not in mapping, it's still casted to avoid errors.
+        But it is not set in settings.
+        """
+        os.environ['DJANGO_NOT_IN_MAPPING'] = '1'
+        import django
+        django.setup()
+        from django.conf import settings
+        self.assertIsNone(getattr(settings, 'NOT_IN_MAPPING', None))
+
 
 if __name__ == '__main__':
     import unittest

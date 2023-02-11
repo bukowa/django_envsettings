@@ -1,3 +1,5 @@
+import ast
+
 from djangobuk_envsettings.conversion import MAPPING
 
 
@@ -30,7 +32,7 @@ def eval_settings(settings: dict, mapping=None) -> dict:
     #     print(opt, value)
     #     print(type(mapping[opt](value)))
     return {
-        opt: mapping[opt](value) for (opt, value) in settings.items()
+        opt: mapping.get(opt, ast.literal_eval)(value) for (opt, value) in settings.items()
     }
 
 
