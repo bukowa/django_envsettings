@@ -42,6 +42,9 @@ def update_from_env(
     # gather all environment settings
     env_settings = gather_settings(pre)
 
+    # filter out settings that are not allowed
+    env_settings = {k: v for k, v in env_settings.items() if k in allowed}
+
     # evaluate settings
     converted_settings = eval_settings(env_settings, mapping)
 
